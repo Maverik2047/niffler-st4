@@ -24,18 +24,18 @@ public class SpendingTest {
     void doLogin() {
         Selenide.open("http://127.0.0.1:3000/main");
         loginPage.clickMainPage()
-                .setUserName("duck1")
+                .setUserName("duck")
                 .setPass("12345")
                 .submit();
     }
 
     @GenerateCategory(
-            username = "duck1",
+            username = "duck",
             category = "Обучение"
     )
 
     @GenerateSpend(
-            username = "duck1",
+            username = "duck",
             description = "QA.GURU Advanced 4",
             amount = 72500.00,
             currency = CurrencyValues.RUB
