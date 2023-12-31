@@ -40,7 +40,7 @@ public class SpendExtension implements BeforeEachCallback {
             CategoryJson categoryJson = (CategoryJson)
                     extensionContext.getStore(CategoryExtension.NAMESPACE).get("category");
 
-            if (extensionContext.getStore(CategoryExtension.NAMESPACE) == null) {
+            if (categoryJson == null) {
                 throw new Exception("Store не содержит данные о категории!");
             }
 

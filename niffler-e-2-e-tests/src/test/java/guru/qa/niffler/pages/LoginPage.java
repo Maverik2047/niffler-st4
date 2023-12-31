@@ -12,25 +12,25 @@ public class LoginPage {
             passField = $("input[name='password']"),
             submitButton = $("button[type='submit']");
 
-    @Step("Кликнем по странице авторизации")
-    public LoginPage clickMainPage() {
+    @Step("Перейти на страницу авторизации")
+    public LoginPage clickNifflerAuthorizationPage() {
         mainPage.click();
         return this;
     }
 
-    @Step("Введем имя пользователя")
+    @Step("Ввести имя пользователя")
     public LoginPage setUserName(String value) {
         userNameField.setValue(value);
         return this;
     }
 
-    @Step("Введем пароль")
+    @Step("Ввести пароль")
     public LoginPage setPass(String value) {
         passField.setValue(value);
         return this;
     }
 
-    @Step("Нажмем подтвердить")
+    @Step("Нажать подтвердить")
     public LoginPage submit() {
         submitButton.click();
         return this;

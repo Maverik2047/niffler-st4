@@ -14,8 +14,8 @@ public class MainPage {
     private final SelenideElement spendingTable = $(".spendings-table tbody"),
             deleteCategory = $(byText("Delete selected"));
 
-    @Step("Найдем категорию и кликним по ней")
-    public MainPage findCategory(String value) {
+    @Step("Найти категорию и кликним по ней")
+    public MainPage findAndClickSelectedCategory(String value) {
         spendingTable.$$("tr")
                 .find(text(value))
                 .$("td [type='checkbox']").scrollTo()
@@ -23,16 +23,16 @@ public class MainPage {
         return this;
     }
 
-    @Step("Удалим найденную категорию")
+    @Step("Удалить найденную категорию")
     public MainPage deleteCategory() {
         deleteCategory.click();
         return this;
     }
 
-    @Step("Проверим что категория удалена")
-    public MainPage checkCategoryTable() {
+    @Step("Проверить что категория удалена")
+    public MainPage checkCategoriesTableSize(int size) {
         spendingTable.$$("tr")
-                .shouldHave(size(0));
+                .shouldHave(size(size));
         return this;
     }
 }

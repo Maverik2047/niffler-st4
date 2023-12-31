@@ -23,27 +23,27 @@ public class SpendingTest {
     @BeforeEach
     void doLogin() {
         Selenide.open("http://127.0.0.1:3000/main");
-        loginPage.clickMainPage()
-                .setUserName("duck")
+        loginPage.clickNifflerAuthorizationPage()
+                .setUserName("duck1")
                 .setPass("12345")
                 .submit();
     }
 
     @GenerateCategory(
-            username = "duck",
+            username = "duck1",
             category = "Обучение"
     )
 
     @GenerateSpend(
-            username = "duck",
+            username = "duck1",
             description = "QA.GURU Advanced 4",
             amount = 72500.00,
             currency = CurrencyValues.RUB
     )
     @Test
     void spendingShouldBeDeletedByButtonDeleteSpendingTest(SpendJson spend) {
-        mainPage.findCategory(spend.description())
+        mainPage.findAndClickSelectedCategory(spend.description())
                 .deleteCategory()
-                .checkCategoryTable();
+                .checkCategoriesTableSize(0);
     }
 }
