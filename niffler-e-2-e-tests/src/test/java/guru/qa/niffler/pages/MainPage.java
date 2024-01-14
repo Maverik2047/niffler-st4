@@ -20,12 +20,14 @@ public class MainPage {
                 .find(text(value))
                 .$("td [type='checkbox']").scrollTo()
                 .click();
+
         return this;
     }
 
     @Step("Удалить найденную категорию")
     public MainPage deleteCategory() {
         deleteCategory.click();
+
         return this;
     }
 
@@ -33,6 +35,7 @@ public class MainPage {
     public MainPage checkCategoriesTableSize(int size) {
         spendingTable.$$("tr")
                 .shouldHave(size(size));
+
         return this;
     }
 }

@@ -14,4 +14,3 @@ public class NifflerUserdataApplication {
     }
 
 }
-//dckr_pat_iW2BqtBb6LBh8GMjgqSVkEC6XxA

@@ -15,24 +15,28 @@ public class LoginPage {
     @Step("Перейти на страницу авторизации")
     public LoginPage clickNifflerAuthorizationPage() {
         mainPage.click();
+
         return this;
     }
 
     @Step("Ввести имя пользователя")
     public LoginPage setUserName(String value) {
         userNameField.setValue(value);
+
         return this;
     }
 
     @Step("Ввести пароль")
     public LoginPage setPass(String value) {
         passField.setValue(value);
+
         return this;
     }
 
     @Step("Нажать подтвердить")
     public LoginPage submit() {
         submitButton.click();
+
         return this;
     }
 }
