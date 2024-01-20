@@ -38,7 +38,7 @@ public class UserWithFriendsTest extends BaseWebTest {
     void friendsTableShouldHaveDifferentUsersAndStatusesTest(@User(WITH_FRIENDS) UserJson user,
                                                              @User(INVITATION_SEND) UserJson user2) {
         headers.clickAllPeoplesBtn();
-        allPeoplePage.checkFriendsTable(user.testData().friendName(), "You are friends",
-                user2.testData().friendName(), "Pending invitation");
+        allPeoplePage.checkFriendsTable(user.testData().friendName(), "You are friends");
+        allPeoplePage.checkFriendsTable(user2.testData().friendName(), "Pending invitation");
     }
 }

@@ -26,14 +26,10 @@ public class AllPeoplePage {
     }
 
     @Step("Проверка, что в таблице Friends есть друг: {user, user2} со статусом: {status, status2}")
-    public AllPeoplePage checkFriendsTable(String user, String status, String user2, String status2) {
+    public AllPeoplePage checkFriendsTable(String user, String status) {
         allPeopleTableUserName.$$("tr")
                 .find(text(user));
         allPeopleTableUserName.shouldHave(text(status));
-
-        allPeopleTableUserName.$$("tr")
-                .find(text(user2));
-        allPeopleTableUserName.shouldHave(text(status2));
 
         return this;
     }
