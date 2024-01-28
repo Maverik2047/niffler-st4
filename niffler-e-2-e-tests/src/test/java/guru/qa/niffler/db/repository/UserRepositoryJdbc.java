@@ -3,6 +3,7 @@ package guru.qa.niffler.db.repository;
 import guru.qa.niffler.db.DataSourceProvider;
 import guru.qa.niffler.db.JdbcUrl;
 import guru.qa.niffler.db.model.Authority;
+import guru.qa.niffler.db.model.CurrencyValues;
 import guru.qa.niffler.db.model.UserAuthEntity;
 import guru.qa.niffler.db.model.UserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -17,101 +18,200 @@ import java.util.UUID;
 
 public class UserRepositoryJdbc implements UserRepository {
 
-  private final DataSource authDs = DataSourceProvider.INSTANCE.dataSource(JdbcUrl.AUTH);
-  private final DataSource udDs = DataSourceProvider.INSTANCE.dataSource(JdbcUrl.USERDATA);
+    private final DataSource authDs = DataSourceProvider.INSTANCE.dataSource(JdbcUrl.AUTH);
+    private final DataSource udDs = DataSourceProvider.INSTANCE.dataSource(JdbcUrl.USERDATA);
 
-  private final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    private final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-  @Override
-  public UserAuthEntity createInAuth(UserAuthEntity user) {
-    try (Connection conn = authDs.getConnection()) {
-      conn.setAutoCommit(false);
+    @Override
+    public UserAuthEntity createInAuth(UserAuthEntity user) {
 
-      try (PreparedStatement userPs = conn.prepareStatement(
-          "INSERT INTO \"user\" " +
-              "(username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
-              "VALUES (?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
-           PreparedStatement authorityPs = conn.prepareStatement(
-               "INSERT INTO \"authority\" " +
-                   "(user_id, authority) " +
-                   "VALUES (?, ?)")
-      ) {
+        try (Connection conn = authDs.getConnection()) {
+            conn.setAutoCommit(false);
 
-        userPs.setString(1, user.getUsername());
-        userPs.setString(2, pe.encode(user.getPassword()));
-        userPs.setBoolean(3, user.getEnabled());
-        userPs.setBoolean(4, user.getAccountNonExpired());
-        userPs.setBoolean(5, user.getAccountNonLocked());
-        userPs.setBoolean(6, user.getCredentialsNonExpired());
+            try (PreparedStatement userPs = conn.prepareStatement(
+                    "INSERT INTO \"user\" " +
+                            "(username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
+                            "VALUES (?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+                 PreparedStatement authorityPs = conn.prepareStatement(
+                         "INSERT INTO \"authority\" " +
+                                 "(user_id, authority) " +
+                                 "VALUES (?, ?)")
+            ) {
 
-        userPs.executeUpdate();
+                userPs.setString(1, user.getUsername());
+                userPs.setString(2, pe.encode(user.getPassword()));
+                userPs.setBoolean(3, user.getEnabled());
+                userPs.setBoolean(4, user.getAccountNonExpired());
+                userPs.setBoolean(5, user.getAccountNonLocked());
+                userPs.setBoolean(6, user.getCredentialsNonExpired());
 
-        UUID authUserId;
-        try (ResultSet keys = userPs.getGeneratedKeys()) {
-          if (keys.next()) {
-            authUserId = UUID.fromString(keys.getString("id"));
-          } else {
-            throw new IllegalStateException("Can`t find id");
-          }
+                userPs.executeUpdate();
+
+                UUID authUserId;
+                try (ResultSet keys = userPs.getGeneratedKeys()) {
+                    if (keys.next()) {
+                        authUserId = UUID.fromString(keys.getString("id"));
+                    } else {
+                        throw new IllegalStateException("Can`t find id");
+                    }
+                }
+
+                for (Authority authority : Authority.values()) {
+                    authorityPs.setObject(1, authUserId);
+                    authorityPs.setString(2, authority.name());
+                    authorityPs.addBatch();
+                    authorityPs.clearParameters();
+                }
+
+                authorityPs.executeBatch();
+                conn.commit();
+                user.setId(authUserId);
+            } catch (Exception e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
-        for (Authority authority : Authority.values()) {
-          authorityPs.setObject(1, authUserId);
-          authorityPs.setString(2, authority.name());
-          authorityPs.addBatch();
-          authorityPs.clearParameters();
-        }
-
-        authorityPs.executeBatch();
-        conn.commit();
-        user.setId(authUserId);
-      } catch (Exception e) {
-        conn.rollback();
-        throw e;
-      } finally {
-        conn.setAutoCommit(true);
-      }
-
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+        return user;
     }
-    return user;
-  }
 
-  @Override
-  public UserEntity createInUserdata(UserEntity user) {
-    try (Connection conn = udDs.getConnection()) {
-      try (PreparedStatement ps = conn.prepareStatement(
-          "INSERT INTO \"user\" " +
-              "(username, currency) " +
-              "VALUES (?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
-        ps.setString(1, user.getUsername());
-        ps.setString(2, user.getCurrency().name());
-        ps.executeUpdate();
+    @Override
+    public UserEntity createInUserdata(UserEntity user) {
+        try (Connection conn = udDs.getConnection()) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "INSERT INTO \"user\" " +
+                            "(username, currency) " +
+                            "VALUES (?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, user.getUsername());
+                ps.setString(2, user.getCurrency().name());
+                ps.executeUpdate();
 
-        UUID userId;
-        try (ResultSet keys = ps.getGeneratedKeys()) {
-          if (keys.next()) {
-            userId = UUID.fromString(keys.getString("id"));
-          } else {
-            throw new IllegalStateException("Can`t find id");
-          }
+                UUID userId;
+                try (ResultSet keys = ps.getGeneratedKeys()) {
+                    if (keys.next()) {
+                        userId = UUID.fromString(keys.getString("id"));
+                    } else {
+                        throw new IllegalStateException("Can`t find id");
+                    }
+                }
+                user.setId(userId);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        user.setId(userId);
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+        return user;
     }
-    return user;
-  }
 
-  @Override
-  public void deleteInAuthById(UUID id) {
+    @Override
+    public UserAuthEntity getInAuthById(UUID userId) {
 
-  }
+        UserAuthEntity userAuthEntity = new UserAuthEntity();
+        try (Connection conn = authDs.getConnection()) {
+            try (PreparedStatement authPs = conn.prepareStatement("SELECT * FROM \"user\" WHERE id = ?")) {
+                authPs.setObject(1, userId);
+                ResultSet authRs = authPs.executeQuery();
+                if (authRs.next()) {
+                    userAuthEntity.setId((UUID) authRs.getObject("id"));
+                    userAuthEntity.setUsername(authRs.getString("username"));
+                    userAuthEntity.setPassword(authRs.getString("password"));
+                    userAuthEntity.setEnabled(authRs.getBoolean("enabled"));
+                    userAuthEntity.setAccountNonExpired(authRs.getBoolean("account_non_expired"));
+                    userAuthEntity.setAccountNonLocked(authRs.getBoolean("account_non_locked"));
+                    userAuthEntity.setCredentialsNonExpired(authRs.getBoolean("credentials_non_expired"));
+                } else {
+                    throw new IllegalArgumentException("Can`t find user with id " + userId);
+                }
+                return userAuthEntity;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-  @Override
-  public void deleteInUserdataById(UUID id) {
+    @Override
+    public UserEntity getInUserDataById(UUID userId) {
 
-  }
+        UserEntity userEntity = new UserEntity();
+
+        try (Connection conn = udDs.getConnection()) {
+
+            try (PreparedStatement authPs = conn.prepareStatement("SELECT * FROM \"user\" WHERE id = ?")) {
+                authPs.setObject(1, userId);
+
+                ResultSet authRs = authPs.executeQuery();
+                if (authRs.next()) {
+                    userEntity.setId((UUID) authRs.getObject("id"));
+                    userEntity.setUsername(authRs.getString("username"));
+                    userEntity.setCurrency(CurrencyValues.valueOf(authRs.getString("currency")));
+                    userEntity.setFirstname(authRs.getString("firstname"));
+                    userEntity.setSurname(authRs.getString("surname"));
+                    userEntity.setPhoto(authRs.getBytes("photo"));
+
+                } else {
+                    throw new IllegalArgumentException("Can`t find user with id " + userId);
+                }
+                return userEntity;
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteInAuthById(UUID id) {
+
+        try (Connection conn = authDs.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement userPs = conn.prepareStatement(
+                    "DELETE FROM \"user\" WHERE id = ?");
+
+                 PreparedStatement authorityPs = conn.prepareStatement(
+                         "DELETE FROM \"authority\" where user_id = ?")
+
+            ) {
+
+                authorityPs.setObject(1, id);
+                authorityPs.executeUpdate();
+                userPs.setObject(1, id);
+                userPs.executeUpdate();
+                conn.commit();
+
+            } catch (Exception e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteInUserdataById(UUID id) {
+
+        try (Connection conn = udDs.getConnection()) {
+
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "DELETE FROM \"user\" WHERE id = ?")) {
+                ps.setObject(1, id);
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
+
