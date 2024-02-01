@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @ExtendWith(DbUserExtension.class)
 public @interface DbUser {
 
-    String userName();
+    String userName() default "";
 
-    String userPassword();
+    String password() default "";
 }

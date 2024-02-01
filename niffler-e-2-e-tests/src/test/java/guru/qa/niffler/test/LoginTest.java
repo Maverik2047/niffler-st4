@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Selenide.$;
 @ExtendWith(UserRepositoryExtension.class)
 public class LoginTest extends BaseWebTest {
 
-    @DbUser(userName = "", userPassword = "")
+    @DbUser(userName = "", password = "")
     @Test
     void statisticShouldBeVisibleAfterLogin(UserAuthEntity userAuth) {
         Selenide.open("http://127.0.0.1:3000/main");
