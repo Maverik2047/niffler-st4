@@ -6,11 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(
-    RetentionPolicy.RUNTIME
+        RetentionPolicy.RUNTIME
 )
 @Target(ElementType.METHOD)
 public @interface DbUser {
-  String username() default "";
+    String username() default "";
 
-  String password() default "";
+    String password() default "";
 }
