@@ -8,16 +8,16 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 
 public class SpendResolverExtension implements ParameterResolver {
 
-  @Override
-  public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-    return parameterContext.getParameter()
-        .getType()
-        .isAssignableFrom(SpendJson.class);
-  }
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return parameterContext.getParameter()
+                .getType()
+                .isAssignableFrom(SpendJson.class);
+    }
 
-  @Override
-  public SpendJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-    return extensionContext.getStore(SpendExtension.NAMESPACE)
-        .get("spend", SpendJson.class);
-  }
+    @Override
+    public SpendJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return extensionContext.getStore(RestSpendExtension.NAMESPACE)
+                .get("spend", SpendJson.class);
+    }
 }
