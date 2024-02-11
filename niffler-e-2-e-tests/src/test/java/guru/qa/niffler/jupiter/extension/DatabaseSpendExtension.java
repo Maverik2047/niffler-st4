@@ -1,4 +1,4 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.db.model.CategoryEntity;
 import guru.qa.niffler.db.model.SpendEntity;
@@ -30,6 +30,7 @@ public class DatabaseSpendExtension extends SpendExtension implements BeforeEach
         spendEntity.setCategory(category);
         spendEntity.setDescription(spend.description());
         spendEntity.setAmount(spend.amount());
+        spendEntity.setUsername(spend.username());
 
         SpendRepositoryHibernate spendRepositoryHibernate = new SpendRepositoryHibernate();
         SpendEntity created = spendRepositoryHibernate.createSpend(spendEntity);
