@@ -67,7 +67,7 @@ public class RestSpendExtension extends SpendExtension implements BeforeEachCall
             );
 
             extensionContext.getStore(NAMESPACE)
-                    .put("spend", create(spendJson));
+                    .put(extensionContext.getUniqueId(), create(spendJson));
         }
     }
 }
