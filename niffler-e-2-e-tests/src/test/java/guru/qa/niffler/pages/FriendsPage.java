@@ -7,7 +7,7 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class FriendsPage {
+public class FriendsPage extends BasePage<FriendsPage> {
 
     private final SelenideElement friendsTable = $(".abstract-table__buttons"),
             friendsTableUserName = $(".abstract-table tbody");
@@ -17,7 +17,6 @@ public class FriendsPage {
         friendsTable.$$("tr")
                 .find(text(name));
         friendsTable.shouldHave(text(state));
-
         return this;
     }
 
@@ -27,7 +26,6 @@ public class FriendsPage {
                 .find(text(name))
                 .$(".button-icon_type_submit")
                 .shouldBe(visible);
-
         return this;
     }
 }

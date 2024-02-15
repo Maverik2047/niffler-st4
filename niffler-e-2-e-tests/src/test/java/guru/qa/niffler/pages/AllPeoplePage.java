@@ -6,7 +6,7 @@ import io.qameta.allure.Step;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
-public class AllPeoplePage {
+public class AllPeoplePage extends BasePage<AllPeoplePage> {
 
     private final SelenideElement allPeopleTableActions = $(".abstract-table__buttons"),
             allPeopleTableUserName = $(".abstract-table tbody");
@@ -14,14 +14,12 @@ public class AllPeoplePage {
     @Step("Проверка, что в таблице All People есть отправленный запрос в друзья")
     public AllPeoplePage checkAllPeopleTableHasPendingInv(String text) {
         allPeopleTableActions.shouldHave(text(text));
-
         return this;
     }
 
     @Step("Проверка, что в таблице All People отображается имя пользователя, которого хотим добавить")
     public AllPeoplePage checkAllPeopleHasRequestedUserName(String name) {
         allPeopleTableUserName.shouldHave(text(name));
-
         return this;
     }
 
@@ -30,7 +28,6 @@ public class AllPeoplePage {
         allPeopleTableUserName.$$("tr")
                 .find(text(user));
         allPeopleTableUserName.shouldHave(text(status));
-
         return this;
     }
 }
