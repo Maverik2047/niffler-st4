@@ -5,15 +5,10 @@ import guru.qa.niffler.jupiter.annotation.GenerateCategory;
 import guru.qa.niffler.jupiter.annotation.GenerateSpend;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.pages.LoginPage;
-import guru.qa.niffler.pages.MainPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class SpendingTest extends BaseWebTest {
-
-    LoginPage loginPage = new LoginPage();
-    MainPage mainPage = new MainPage();
 
     @BeforeEach
     void doLogin() {

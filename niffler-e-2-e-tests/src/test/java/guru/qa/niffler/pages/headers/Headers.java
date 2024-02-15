@@ -1,4 +1,4 @@
-package guru.qa.niffler.pages;
+package guru.qa.niffler.pages.headers;
 
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
@@ -13,14 +13,12 @@ public class Headers {
     @Step("Перейти на страницу Friends")
     public Headers clickFriendsBtn() {
         friendsBtn.click();
-
         return this;
     }
 
     @Step("Перейти на страницу All People")
     public Headers clickAllPeoplesBtn() {
         allPeopleBtn.click();
-
         return this;
     }
 }
