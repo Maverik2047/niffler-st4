@@ -34,7 +34,7 @@ public class UserWithFriendsTest extends BaseWebTest {
     }
 
     @Test
-    @DisplayName("Проверка что в таблице Friends есть пользоветели с разными статусами")
+    @DisplayName("Проверка что в таблице Friends есть пользователи с разными статусами")
     void friendsTableShouldHaveDifferentUsersAndStatusesTest(@User(WITH_FRIENDS) UserJson user,
                                                              @User(INVITATION_SEND) UserJson user2) {
         headers.clickAllPeoplesBtn();
