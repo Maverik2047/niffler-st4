@@ -1,5 +1,6 @@
 package guru.qa.niffler.pages;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
@@ -12,7 +13,8 @@ public class LoginPage extends BasePage<LoginPage> {
     private final SelenideElement
             userNameField = $("input[name='username']"),
             passField = $("input[name='password']"),
-            submitButton = $("button[type='submit']");
+            submitButton = $("button[type='submit']"),
+            mainContent = $(".main-content__section-stats");
 
     @Step("Перейти на страницу авторизации")
     public LoginPage clickNifflerAuthorizationPage() {
@@ -35,6 +37,12 @@ public class LoginPage extends BasePage<LoginPage> {
     @Step("Нажать подтвердить")
     public LoginPage submit() {
         submitButton.click();
+        return this;
+    }
+
+    @Step("Проверить содержание")
+    public LoginPage checkMainContent() {
+        mainContent.should(Condition.visible);
         return this;
     }
 }

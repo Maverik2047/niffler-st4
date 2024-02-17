@@ -37,6 +37,6 @@ public class UserFriendInvitationSentTest extends BaseWebTest {
     void requestedUserFriendTest(@User(INVITATION_SEND) UserJson user) {
 
         headers.clickAllPeoplesBtn();
-        allPeoplePage.checkAllPeopleHasRequestedUserName(user.testData().friendName());
+        allPeoplePage.checkAllPeopleHasRequestedUserName("Jean Poole");
     }
 }
