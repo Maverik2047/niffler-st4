@@ -25,8 +25,8 @@ public abstract class BaseWebTest {
     }
     @AfterEach
     void closeWebDriver(){
-//        Selenide.closeWebDriver();
-        Selenide.closeWindow();
+
         Selenide.webdriver().driver().close();
+        Selenide.closeWindow();
     }
 }
