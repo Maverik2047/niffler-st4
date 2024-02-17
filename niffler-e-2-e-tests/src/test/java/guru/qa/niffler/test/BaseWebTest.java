@@ -23,10 +23,11 @@ public abstract class BaseWebTest {
         Configuration.browserSize = "1980x1024";
         Configuration.browser = "chrome";
     }
+
     @AfterEach
-    void closeWebDriver(){
-//        Selenide.closeWebDriver();
-        Selenide.closeWindow();
+    void closeWebDriver() {
+
         Selenide.webdriver().driver().close();
+        Selenide.closeWindow();
     }
 }
