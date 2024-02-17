@@ -1,6 +1,5 @@
 package guru.qa.niffler.test;
 
-import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.db.model.CurrencyValues;
@@ -46,7 +45,6 @@ public class HistoryOfSpendingsTest extends BaseWebTest {
                 .setUserName(userAuth.getUsername())
                 .setPass(userAuth.getPassword())
                 .submit();
-        Configuration.holdBrowserOpen = true;
     }
 
     @AfterEach
