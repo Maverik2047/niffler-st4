@@ -32,8 +32,8 @@ public class SpendingTest extends BaseWebTest {
     )
     @Test
     void spendingShouldBeDeletedByButtonDeleteSpendingTest(SpendJson spend) {
-        mainPage.findAndClickSelectedCategory(spend.description())
-                .deleteCategory()
-                .checkCategoriesTableSize(0);
+        mainPage.getSpendingTable()
+                .checkSpends(spend)
+                .selectByText(spend.description());
     }
 }

@@ -1,14 +1,11 @@
-package guru.qa.niffler.page;
+package guru.qa.niffler.pages;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.CurrencyValues;
 import io.qameta.allure.Step;
 
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.value;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -102,13 +99,6 @@ public class ProfilePage extends BasePage<ProfilePage> {
     @Step("Save profile")
     public ProfilePage submitProfile() {
         submitButton.click();
-        return this;
-    }
-
-    @Step("Check that page is loaded")
-    @Override
-    public ProfilePage waitForPageLoaded() {
-        userName.should(visible);
         return this;
     }
 }

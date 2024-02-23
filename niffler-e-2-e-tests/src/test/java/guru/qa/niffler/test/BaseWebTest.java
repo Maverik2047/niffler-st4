@@ -28,6 +28,5 @@ public abstract class BaseWebTest {
     void closeWebDriver() {
 
         Selenide.webdriver().driver().close();
-        Selenide.closeWindow();
     }
 }

@@ -1,10 +1,10 @@
-package guru.qa.niffler.page.component;
+package guru.qa.niffler.pages.component;
 
 import static com.codeborne.selenide.Selenide.$;
 
 public class Footer extends BaseComponent<Footer> {
 
-  public Footer() {
-    super($(".footer"));
-  }
+    public Footer() {
+        super($(".footer"));
+    }
 }
