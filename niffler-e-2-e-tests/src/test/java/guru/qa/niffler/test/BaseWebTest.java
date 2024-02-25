@@ -22,6 +22,7 @@ public abstract class BaseWebTest {
     static {
         Configuration.browserSize = "1980x1024";
         Configuration.browser = "chrome";
+        Configuration.browserVersion = "120.0";
     }
 
     @AfterEach

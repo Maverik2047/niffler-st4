@@ -7,6 +7,8 @@ import java.io.IOException;
 
 public class RestSpendExtension extends SpendExtension {
 
+    SpendApiClient spendApiClient = new SpendApiClient();
+
     @Override
     SpendJson create(SpendJson spend) {
         try {
@@ -15,6 +17,4 @@ public class RestSpendExtension extends SpendExtension {
             throw new RuntimeException(e);
         }
     }
-
-    SpendApiClient spendApiClient = new SpendApiClient();
 }

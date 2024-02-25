@@ -19,44 +19,50 @@ import java.util.Locale;
 
 public class SpendCollectionCondition {
 
-    public static CollectionCondition spends(SpendJson... expectedSPends) {
+    public static CollectionCondition spends(SpendJson... expectedSpends) {
+
         return new CollectionCondition() {
 
-            final List<String> expectedTexts = new ArrayList<>();
-            final List<String> actualTexts = new ArrayList<>();
+            private final List<String> expectedTexts = new ArrayList<>();
 
             @Nonnull
             @Override
             public CheckResult check(Driver driver, List<WebElement> elements) {
 
-                if (elements.size() != expectedSPends.length) {
+                if (elements.size() != expectedSpends.length) {
+
                     return CheckResult.rejected("Incorrect table size: " + elements.size(), elements);
                 }
+                for (int i = 0; i < expectedSpends.length; i++) {
 
-                for (WebElement element : elements) {
+                    WebElement row = elements.get(i);
+                    SpendJson expectedSpending = expectedSpends[i];
 
-                    List<String> actualLineText = element.findElements(By.cssSelector("td")).stream()
-                            .map(WebElement::getText)
-                            .filter(text -> !"".equals(text))
-                            .toList();
+                    List<WebElement> cells = row.findElements(By.cssSelector("td"));
 
-                    actualTexts.addAll(actualLineText);
+                    if (!new SimpleDateFormat("dd MMM yy", Locale.ENGLISH)
+                            .format(expectedSpending.spendDate()).equals(cells.get(1).getText())) {
+
+                        return CheckResult.rejected("Incorrect spends content", expectedSpending);
+                    }
+                    if (!expectedSpending.amount().equals(Double.valueOf(cells.get(2).getText()))) {
+
+                        return CheckResult.rejected("Incorrect spends content", expectedSpending);
+                    }
+                    if (!expectedSpending.currency().name().equals(cells.get(3).getText())) {
+
+                        return CheckResult.rejected("Incorrect spends content", expectedSpending);
+                    }
+                    if (!expectedSpending.category().equals(cells.get(4).getText())) {
+
+                        return CheckResult.rejected("Incorrect spends content", expectedSpending);
+                    }
+                    if (!expectedSpending.description().equals(cells.get(5).getText())) {
+
+                        return CheckResult.rejected("Incorrect spends content", expectedSpending);
+                    }
                 }
-
-                for (SpendJson expectedSPend : expectedSPends) {
-                    expectedTexts.add(new SimpleDateFormat("dd MMM yy", Locale.ENGLISH)
-                            .format(expectedSPend.spendDate()));
-                    expectedTexts.add(String.valueOf(expectedSPend.amount()));
-                    expectedTexts.add(String.valueOf(expectedSPend.currency()));
-                    expectedTexts.add(expectedSPend.category());
-                    expectedTexts.add(expectedSPend.description());
-                }
-
-                if (expectedTexts.equals(actualTexts)) {
-                    return CheckResult.accepted();
-                }
-
-                return CheckResult.rejected("Incorrect spends content", actualTexts);
+                return CheckResult.accepted();
             }
 
             @Override

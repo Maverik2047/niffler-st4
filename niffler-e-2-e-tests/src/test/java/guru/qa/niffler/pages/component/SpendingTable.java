@@ -21,8 +21,7 @@ public class SpendingTable extends BaseComponent<SpendingTable> {
 
         getSelf().$$("tr")
                 .get(index - 1)
-                .$$("td")
-                .first()
+                .$("td")
                 .scrollIntoView(true)
                 .click();
         return this;
