@@ -52,19 +52,23 @@ public class SpendCollectionCondition {
                     if (!new SimpleDateFormat("dd MMM yy", Locale.ENGLISH)
                             .format(expectedSpending.spendDate()).equals(cells.get(1).getText())) {
 
-                        return CheckResult.rejected("Incorrect spends content", expectedSpending);
+                        return CheckResult.rejected("Incorrect spends content", List.of(expectedSpending,
+                                actualSpendInTable));
                     }
                     if (!expectedSpending.amount().equals(Double.valueOf(cells.get(2).getText()))) {
 
-                        return CheckResult.rejected("Incorrect spends content", expectedSpending);
+                        return CheckResult.rejected("Incorrect spends content", List.of(expectedSpending,
+                                actualSpendInTable));
                     }
                     if (!expectedSpending.currency().name().equals(cells.get(3).getText())) {
 
-                        return CheckResult.rejected("Incorrect spends content", expectedSpending);
+                        return CheckResult.rejected("Incorrect spends content", List.of(expectedSpending,
+                                actualSpendInTable));
                     }
                     if (!expectedSpending.category().equals(cells.get(4).getText())) {
 
-                        return CheckResult.rejected("Incorrect spends content", expectedSpending);
+                        return CheckResult.rejected("Incorrect spends content", List.of(expectedSpending,
+                                actualSpendInTable));
                     }
                     if (!expectedSpending.description().equals(cells.get(5).getText())) {
 
