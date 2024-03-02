@@ -1,6 +1,7 @@
 package guru.qa.niffler.test;
 
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.GenerateCategory;
 import guru.qa.niffler.jupiter.annotation.GenerateSpend;
 import guru.qa.niffler.model.CurrencyValues;
@@ -12,7 +13,7 @@ public class SpendingTest extends BaseWebTest {
 
     @BeforeEach
     void doLogin() {
-        Selenide.open("http://127.0.0.1:3000/main");
+        Selenide.open(Config.getInstance().mainPageUrl());
         loginPage.clickNifflerAuthorizationPage()
                 .setUserName("duck1")
                 .setPass("12345")
@@ -32,8 +33,8 @@ public class SpendingTest extends BaseWebTest {
     )
     @Test
     void spendingShouldBeDeletedByButtonDeleteSpendingTest(SpendJson spend) {
-        mainPage.findAndClickSelectedCategory(spend.description())
-                .deleteCategory()
-                .checkCategoriesTableSize(0);
+        mainPage.getSpendingTable()
+                .checkSpends(spend)
+                .selectByText(spend.description());
     }
 }
